@@ -46,6 +46,10 @@ public abstract class Sprite {
 		y += delta;
 	}
 	
+	public void update() {
+		
+	}
+	
 	public boolean overlaps(Sprite otherSprite) {
 		//Capture heros boundaries
 		Rectangle ourBounds = new Rectangle();
