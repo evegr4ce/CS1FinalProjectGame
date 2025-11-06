@@ -19,7 +19,7 @@ public class Game extends JFrame {
 	
 	private ArrayList<Enemy> enemies;
 	private ArrayList<Item> items;
-	//private ArrayList<Obstacle> obstacles;
+	private ArrayList<Obstacle> obstacles;
 	private ArrayList<Sprite> all_sprites;
 	
 	private Hero hero;
