@@ -14,7 +14,7 @@ public class Game extends JFrame {
 	private static final int WINDOW_HEIGHT = 768;
 	
 	private BufferedImage backBuffer;
-	private Insets instets;
+	private Insets insets;
 	private InputHandler input;
 	
 	private ArrayList<Enemy> enemies;
@@ -75,7 +75,7 @@ public class Game extends JFrame {
      * This method will set up everything need for the game to run
      */
     void initialize() {
-        setTitle("Mario!");
+        setTitle("Adventure Default");
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);

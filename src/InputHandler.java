@@ -1,6 +1,8 @@
 import java.awt.Component;
 import java.awt.event.*;
 
+import javax.swing.JPanel;
+
 /**
  * Makes handling input a lot simpler
  */
@@ -62,4 +64,30 @@ public class InputHandler implements KeyListener
          * Not used
          */
         public void keyTyped(KeyEvent e){}
+
+
+		public class MouseMotionEvent extends JPanel implements MouseMotionListener {
+
+			private static final long serialVersionUID = 2844373802080978113L;
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				// TODO Auto-generated method stub
+			}
+		}
+		
+		public class ButtonListener implements ActionListener {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		}
 }
