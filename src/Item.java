@@ -1,9 +1,9 @@
 import java.awt.*; 
 
-public class Items  extends Sprite{
+public class Item extends Sprite{
 	private double value; 
 	
-	public Iteam(String path,int x, int y, double value ) { 
+	public Item(String path,int x, int y, double value ) { 
 		super(path, x, y); 
 		this.value = _value; 
 	}
