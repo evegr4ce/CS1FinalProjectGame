@@ -1,4 +1,15 @@
 
 public abstract class Character extends Sprite{
-    private String name;
+    
+	private int speed;
+	
+	public Character(String path, int x, int y, int speed) {
+		super(path, x, y);
+		this.speed = speed;
+	}
+	
+	public int getSpeed() {
+		return speed;
+	}
+	
 }
