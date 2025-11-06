@@ -5,10 +5,16 @@ public class Item extends Sprite{
 	
 	public Item(String path,int x, int y, double value ) { 
 		super(path, x, y); 
-		this.value = _value; 
+		this.value = value; 
 	}
 	public double getValue() { 
 		return this.value; 
+	}
+	
+	@Override
+	public boolean collidedWith(Sprite other) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
