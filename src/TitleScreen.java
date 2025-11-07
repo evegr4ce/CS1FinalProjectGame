@@ -6,7 +6,8 @@ public class TitleScreen extends Game {
 	}
 	
 	public void initialize() {
-		BackgroundPanel backgroundPanel = new BackgroundPanel("path/to/your/image.jpg");
+		setSize(Game.getWindowWidth(), Game.getWindowHeight());
+		//BackgroundImageJFrame backgroundPanel = new BackgroundImageJFrame("titlescreen.jpg");
 		
 	}
 }
