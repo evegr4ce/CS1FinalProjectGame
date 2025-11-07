@@ -89,11 +89,11 @@ public class Obstacle extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // 🌿 Background
+        //  Background
         g2.setColor(new Color(60, 160, 80));
         g2.fillRect(0, 0, getWidth(), getHeight());
 
-        // 🟨 Draw raised 3D paths
+        //  Draw raised 3D paths
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 char c = maze[y][x];
