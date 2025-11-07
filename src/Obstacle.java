@@ -122,7 +122,7 @@ public class Obstacle extends JPanel {
             }
         }
 
-        // 🌲 3 trees + 3 rocks in corner
+        //  3 trees + 3 rocks in corner
         int startX = (width - 6) * cellSize;
         int startY = (height - 2) * cellSize;
 
