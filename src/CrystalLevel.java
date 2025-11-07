@@ -2,11 +2,15 @@ import java.awt.*;
 
 import javax.swing.*;
 
-public class CrystalLevel extends JPanel{
+public class CrystalLevel extends Game {
 
 	public CrystalLevel() {
-		setBackground(Color.PINK);
-		
+		super();
 	}
 	
+	@Override
+	public void setBackground() {
+		BackgroundPanel backgroundPanel = new BackgroundPanel("titlescreen.jpg");
+	    setContentPane(backgroundPanel);
+	}
 }

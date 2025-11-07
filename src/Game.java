@@ -31,6 +31,7 @@ public abstract class Game extends JFrame {
 	private Hero hero;
 	
 	public Game() {
+		
 		enemies = new ArrayList<Enemy>();
 		items = new ArrayList<Item>();
 		all_sprites = new ArrayList<Sprite>();
@@ -86,19 +87,13 @@ public abstract class Game extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
-        setBackground();
-        
         insets = getInsets();
         setSize(insets.left + WINDOW_WIDTH + insets.right,
                 insets.top + WINDOW_HEIGHT + insets.bottom);
         
         setVisible(true);
         
-        try {
-        	backgroundImage = ImageIO.read(new File("titlescreen.jpg"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        setBackground();
 
         backBuffer = new BufferedImage(WINDOW_WIDTH, WINDOW_HEIGHT, BufferedImage.TYPE_INT_RGB);
         input = new InputHandler(this);
@@ -166,8 +161,8 @@ public abstract class Game extends JFrame {
         Graphics g = getGraphics();
         Graphics bbg = backBuffer.getGraphics();
         
-        if (backgroundImage != null) {
-        	bbg.drawImage(backgroundImage, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, null);
+        if (BackgroundPanel.getBackgroundImage() != null) {
+        	bbg.drawImage(BackgroundPanel.getBackgroundImage(), 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, null);
         }
         else {
         	bbg.setColor(Color.WHITE);
