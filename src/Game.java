@@ -12,7 +12,7 @@ import java.util.ArrayList;
 /**
  * Main class for the game
  */
-public class Game extends JFrame {
+public abstract class Game extends JFrame {
 	private boolean isRunning = true;
 	private int fps = 60;
 	private static final int WINDOW_WIDTH = 1280;
@@ -80,14 +80,13 @@ public class Game extends JFrame {
     /**
      * This method will set up everything need for the game to run
      */
-    void initialize() {
+    public void initialize() {
         setTitle("Adventure");
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
-        BackgroundPanel backgroundPanel = new BackgroundPanel("titlescreen.jpg");
-        setContentPane(backgroundPanel);
+        setBackground();
         
         insets = getInsets();
         setSize(insets.left + WINDOW_WIDTH + insets.right,
@@ -104,6 +103,12 @@ public class Game extends JFrame {
         backBuffer = new BufferedImage(WINDOW_WIDTH, WINDOW_HEIGHT, BufferedImage.TYPE_INT_RGB);
         input = new InputHandler(this);
     }
+    
+    
+    /**
+     * This class will set the background image for each level.
+     */
+    public abstract void setBackground();
 
     /**
      * This method will check for input, move things
