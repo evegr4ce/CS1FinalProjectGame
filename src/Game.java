@@ -1,6 +1,11 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import java.util.ArrayList;
 
@@ -14,12 +19,13 @@ public class Game extends JFrame {
 	private static final int WINDOW_HEIGHT = 768;
 	
 	private BufferedImage backBuffer;
+	private BufferedImage backgroundImage;
 	private Insets insets;
 	private InputHandler input;
 	
 	private ArrayList<Enemy> enemies;
 	private ArrayList<Item> items;
-	//private ArrayList<Obstacle> obstacles;
+	private ArrayList<Obstacle> obstacles;
 	private ArrayList<Sprite> all_sprites;
 	
 	private Hero hero;
@@ -75,14 +81,25 @@ public class Game extends JFrame {
      * This method will set up everything need for the game to run
      */
     void initialize() {
-        setTitle("Adventure Default");
+        setTitle("Adventure");
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(true);
+        
+        BackgroundPanel backgroundPanel = new BackgroundPanel("titlescreen.jpg");
+        setContentPane(backgroundPanel);
+        
         insets = getInsets();
         setSize(insets.left + WINDOW_WIDTH + insets.right,
                 insets.top + WINDOW_HEIGHT + insets.bottom);
+        
+        setVisible(true);
+        
+        try {
+        	backgroundImage = ImageIO.read(new File("titlescreen.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         backBuffer = new BufferedImage(WINDOW_WIDTH, WINDOW_HEIGHT, BufferedImage.TYPE_INT_RGB);
         input = new InputHandler(this);
@@ -143,9 +160,14 @@ public class Game extends JFrame {
     void draw() {
         Graphics g = getGraphics();
         Graphics bbg = backBuffer.getGraphics();
-
-        bbg.setColor(Color.WHITE);
-        bbg.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        
+        if (backgroundImage != null) {
+        	bbg.drawImage(backgroundImage, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, null);
+        }
+        else {
+        	bbg.setColor(Color.WHITE);
+            bbg.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        }
 
         for (int i = 0; i < all_sprites.size(); i++) {
             all_sprites.get(i).draw(bbg);
