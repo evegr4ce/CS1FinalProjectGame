@@ -1,4 +1,5 @@
 
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -18,12 +19,14 @@ public class TitleScreen extends Game implements ActionListener{
 	private JButton startButton;
 	private JButton testCharacter;
 	private BufferedImage titleImage;
+	private Image scaledTitleImage;
 	
 	public TitleScreen() {
 		super();
 		
 		try {
 			titleImage = ImageIO.read(new File("Title.png"));
+			scaledTitleImage = titleImage.getScaledInstance(400, -1, Image.SCALE_SMOOTH);
 		} catch (IOException e) {
 			e.printStackTrace();
             System.out.println(e.getMessage());
@@ -33,8 +36,6 @@ public class TitleScreen extends Game implements ActionListener{
 		startButton = createButton(startIcon);
 		startButton.addActionListener(this);
 		//add(startButton);
-		
-		
 		
 	}
 	
@@ -100,6 +101,7 @@ public class TitleScreen extends Game implements ActionListener{
         backgroundPanel.add(startButton);
 	}
 	
+	/**
 	public void paintComponent(Graphics g) {
 		super.paint(g);
 		
@@ -107,6 +109,22 @@ public class TitleScreen extends Game implements ActionListener{
             g.drawImage(titleImage, (getWidth() - titleImage.getWidth()) / 2, 20, null);
         }
 	}
+	*/
+	
+
+	@Override
+	public void paint(Graphics g) {   //added this
+	    super.paint(g);
+
+	    if (titleImage != null) {
+	        int x = (getWidth() - scaledTitleImage.getWidth(null)) /2;
+	        int y = (getHeight() - scaledTitleImage.getHeight(null)) / 2;
+	        
+	        g.drawImage(scaledTitleImage, x, y, this);
+	    }
+	}
+
+
 	
 	 public static void main(String[] args) {
 		 SwingUtilities.invokeLater(() -> {
@@ -115,9 +133,9 @@ public class TitleScreen extends Game implements ActionListener{
 		        titleScreen.setSize(800, 600);
 		        titleScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		        titleScreen.setLayout(null);
-		        titleScreen.setVisible(true);
-
+		        titleScreen.repaint();
 		        titleScreen.setBackground();
+		        titleScreen.setVisible(true);
 		    });
 
 	 }

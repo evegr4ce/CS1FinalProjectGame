@@ -24,6 +24,12 @@ public class MushroomLevelBossFight extends Game{
 		        mushroomLevelBossFight.setVisible(true);
 
 		        mushroomLevelBossFight.setBackground();
+		        
+		        Hero hero = new Hero("test.png", 100, 300, 10, "Test Hero");
+	            Enemy boss = new Enemy("test.png", 600, 300, 5, 50);
+	            mushroomLevelBossFight.addHero(hero);
+	            mushroomLevelBossFight.addEnemy(boss);
+	            
 		    });
 
 	 }
