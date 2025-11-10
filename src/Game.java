@@ -6,7 +6,12 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+
 import java.util.ArrayList;
 
 /**
@@ -17,11 +22,13 @@ public abstract class Game extends JFrame {
 	private int fps = 60;
 	private static final int WINDOW_WIDTH = 1280;
 	private static final int WINDOW_HEIGHT = 768;
-	
-	private BufferedImage backBuffer;
-	private BufferedImage backgroundImage;
+
+	private Image backgroundImage;
 	private Insets insets;
 	private InputHandler input;
+	
+	JLayeredPane characters;
+	GamePanel gamePanel; 
 	
 	private ArrayList<Enemy> enemies;
 	private ArrayList<Item> items;
@@ -34,7 +41,10 @@ public abstract class Game extends JFrame {
 		
 		enemies = new ArrayList<Enemy>();
 		items = new ArrayList<Item>();
+		obstacles = new ArrayList<Obstacle>();
 		all_sprites = new ArrayList<Sprite>();
+		
+		characters = new JLayeredPane();
 	}
 	
 	public void addHero(Hero h) {
@@ -82,20 +92,32 @@ public abstract class Game extends JFrame {
      * This method will set up everything need for the game to run
      */
     public void initialize() {
-        setTitle("Adventure");
+        setTitle("Adventure Game");
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(null);
         
-        insets = getInsets();
-        setSize(insets.left + WINDOW_WIDTH + insets.right,
-                insets.top + WINDOW_HEIGHT + insets.bottom);
+//        insets = getInsets();
+//        setSize(insets.left + WINDOW_WIDTH + insets.right,
+//                insets.top + WINDOW_HEIGHT + insets.bottom);
         
+        BackgroundPanel bg = setBackground();
+        backgroundImage = bg.getBackgroundImage();
+        
+        gamePanel = new GamePanel();
+        gamePanel.setOpaque(false);
+        gamePanel.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        
+        characters.setLayout(null);
+        characters.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        characters.add(gamePanel);
+        add(characters);
+     
+        characters.setVisible(true);
         setVisible(true);
         
-        setBackground();
-
-        backBuffer = new BufferedImage(WINDOW_WIDTH, WINDOW_HEIGHT, BufferedImage.TYPE_INT_RGB);
+        requestFocusInWindow();
         input = new InputHandler(this);
     }
     
@@ -103,7 +125,23 @@ public abstract class Game extends JFrame {
     /**
      * This class will set the background image for each level.
      */
-    public abstract void setBackground();
+    public abstract BackgroundPanel setBackground();
+    
+    class GamePanel extends JPanel {
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            if (backgroundImage != null) {
+                g.drawImage(backgroundImage, 0, 0, null);
+            }
+
+            // Draw sprites
+            for (Sprite sprite : all_sprites) {
+                sprite.draw(g);
+            }
+        }
+    }
 
     /**
      * This method will check for input, move things
@@ -113,6 +151,7 @@ public abstract class Game extends JFrame {
 
         if (input.isKeyDown(KeyEvent.VK_LEFT)) {
             hero.moveLeft();
+            System.out.println("Left");
         }
         if (input.isKeyDown(KeyEvent.VK_RIGHT)) {
             hero.moveRight();
@@ -132,6 +171,8 @@ public abstract class Game extends JFrame {
         for (int i = 0; i < all_sprites.size(); i++) {
             all_sprites.get(i).update();
         }
+        
+        System.out.println(hero.getX() + ", " + hero.getY());
     }
     
     void checkCollisions() {
@@ -158,22 +199,7 @@ public abstract class Game extends JFrame {
      * This method will draw everything
      */
     void draw() {
-        Graphics g = getGraphics();
-        Graphics bbg = backBuffer.getGraphics();
-        
-        if (BackgroundPanel.getBackgroundImage() != null) {
-        	bbg.drawImage(BackgroundPanel.getBackgroundImage(), 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, null);
-        }
-        else {
-        	bbg.setColor(Color.WHITE);
-            bbg.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-        }
-
-        for (int i = 0; i < all_sprites.size(); i++) {
-            all_sprites.get(i).draw(bbg);
-        }
-
-        g.drawImage(backBuffer, insets.left, insets.top, this);
+        gamePanel.repaint();
     }
     
     public static int getWindowHeight() {

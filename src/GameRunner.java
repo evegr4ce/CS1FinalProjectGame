@@ -4,10 +4,12 @@ public class GameRunner {
 
 	public static void main(String[] args) {
 		IslandScreen game = new IslandScreen();
-        game.run();
 		
-		// Game level1 = new LevelOne();
-
+		Hero h = new Hero("test.png", 50, 50, 5, "Mario");
+        game.addHero(h);
+        
+        new Thread(() -> game.run()).start();
+        
 	}
 
 }
