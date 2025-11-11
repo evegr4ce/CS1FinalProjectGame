@@ -45,6 +45,7 @@ public abstract class Game extends JFrame {
 		all_sprites = new ArrayList<Sprite>();
 		
 		characters = new JLayeredPane();
+		
 	}
 	
 	public void addHero(Hero h) {
@@ -124,13 +125,17 @@ public abstract class Game extends JFrame {
      */
     public abstract BackgroundPanel setBackground();
     
+    public static Game getCurrentLevel() {
+        return null; 
+    }
+    
     class GamePanel extends JPanel {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 
             if (backgroundImage != null) {
-                g.drawImage(backgroundImage, 0, 0, null);
+                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
             }
 
             // Draw sprites
@@ -203,4 +208,5 @@ public abstract class Game extends JFrame {
     public static int getWindowWidth() {
     	return WINDOW_WIDTH;
     }
+    
 }

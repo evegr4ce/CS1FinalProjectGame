@@ -5,35 +5,50 @@ public class Hero extends Character{
 	private boolean isJumping = false;
 	private double velocityY = 0;
 	private final double gravity = 0.8;
-	private final double jumpStrength = -15;
+	private final double jumpStrength = -10;
 	private boolean isAttacking = false;
+	private int groundY;
 	
 	public Hero(String path, int x, int y, int speed, String heroName) {
 		super(path, x, y, speed);
 		this.heroName = heroName;
+		groundY = y;
 	}
 	
 	public void update() {
-		if (isJumping) {
-			velocityY += gravity;
-			updateY((int) velocityY);
-			if (getY() >= Game.getWindowHeight() - getHeight() - 50) {
-                setY(Game.getWindowHeight() - getHeight() - 50);
-                velocityY = 0;
-                isJumping = false;
-            }
-		}
+	    int groundLevel = groundY;
+
+	    if (isJumping) {
+	        velocityY += gravity;
+	        setY((int) (getY() + velocityY));
+
+	        if (getY() >= groundLevel) {
+	            setY(groundLevel);
+	            velocityY = 0;
+	            isJumping = false;
+	        }
+	    } else {
+	        if (getY() > groundLevel) {
+	            setY(groundLevel);
+	        }
+	    }
 	}
+
+
 	
 	public void moveUp() {
-		if (!isJumping) {
-			isJumping = true;
-			velocityY = jumpStrength;
-		}
+	    if (!isJumping && MushroomLevelBossFight.getCurrentLevel() instanceof MushroomLevelBossFight) {
+	        isJumping = true;
+	        velocityY = jumpStrength;
+	    } else {
+	        updateY(-getSpeed());
+	    }
 	}
 	
 	public void moveDown() {
-		updateY(getSpeed());
+		if (!(MushroomLevelBossFight.getCurrentLevel() instanceof MushroomLevelBossFight)) {
+            updateY(getSpeed());
+        }
 	}
 	
 	public void moveLeft() {

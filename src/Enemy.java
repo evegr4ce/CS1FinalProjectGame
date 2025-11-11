@@ -32,9 +32,6 @@ public class Enemy extends Character {
 		
 		updateX(direction * getSpeed());
 		
-		if (getX() < 0 || getX() > Game.getWindowWidth() - getWidth()) {
-			direction *= -1;
-		}
 	}
 
 	@Override
