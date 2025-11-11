@@ -2,14 +2,9 @@ import java.awt.*;
 
 import javax.swing.*;
 
-public class MushroomLevel extends Game {
+public class MushroomLevel extends JPanel{
 
 	public MushroomLevel() {
-		super();
-	}
-
-	@Override
-	public BackgroundPanel setBackground() {
-		return new BackgroundPanel("islandscreen.jpg");
+		setBackground(Color.PINK);
 	}
 }
