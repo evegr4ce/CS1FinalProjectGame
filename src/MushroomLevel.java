@@ -9,7 +9,7 @@ public class MushroomLevel extends Game {
 	}
 
 	@Override
-	public void setBackground() {
-		BackgroundPanel backgroundPanel = new BackgroundPanel("islandscreen.jpg");
+	public BackgroundPanel setBackground() {
+		return new BackgroundPanel("islandscreen.jpg");
 	}
 }

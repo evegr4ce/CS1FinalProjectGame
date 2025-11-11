@@ -20,8 +20,8 @@ import java.util.ArrayList;
 public abstract class Game extends JFrame {
 	private boolean isRunning = true;
 	private int fps = 60;
-	private static final int WINDOW_WIDTH = 1280;
-	private static final int WINDOW_HEIGHT = 768;
+	private static final int WINDOW_WIDTH = 800;
+	private static final int WINDOW_HEIGHT = 600;
 
 	private Image backgroundImage;
 	private Insets insets;
@@ -109,12 +109,9 @@ public abstract class Game extends JFrame {
         gamePanel.setOpaque(false);
         gamePanel.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
         
-        characters.setLayout(null);
-        characters.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-        characters.add(gamePanel);
-        add(characters);
+        add(gamePanel);
      
-        characters.setVisible(true);
+        gamePanel.setVisible(true);
         setVisible(true);
         
         requestFocusInWindow();
@@ -151,7 +148,6 @@ public abstract class Game extends JFrame {
 
         if (input.isKeyDown(KeyEvent.VK_LEFT)) {
             hero.moveLeft();
-            System.out.println("Left");
         }
         if (input.isKeyDown(KeyEvent.VK_RIGHT)) {
             hero.moveRight();
@@ -171,8 +167,6 @@ public abstract class Game extends JFrame {
         for (int i = 0; i < all_sprites.size(); i++) {
             all_sprites.get(i).update();
         }
-        
-        System.out.println(hero.getX() + ", " + hero.getY());
     }
     
     void checkCollisions() {
