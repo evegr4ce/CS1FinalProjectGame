@@ -31,9 +31,8 @@ public class TitleScreen extends Game implements ActionListener{
 		super();
 		
 		try {
-			titleImage = ImageIO.read(new File("adventureGame.png"));
-			scaledTitleImage = titleImage.getScaledInstance(700, -1, Image.SCALE_SMOOTH);
-			title = new JLabel((new ImageIcon(scaledTitleImage)));
+			titleImage = ImageIO.read(new File("Title.png"));
+			scaledTitleImage = titleImage.getScaledInstance(400, -1, Image.SCALE_SMOOTH);
 		} catch (IOException e) {
 			e.printStackTrace();
             System.out.println(e.getMessage());
