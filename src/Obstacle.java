@@ -4,15 +4,19 @@ import java.util.Random;
 
 public class Obstacle extends JPanel {
 
-    private final int width;
-    private final int height;
-    private final char[][] maze;
+    private int width;
+    private int height;
+    private char[][] maze;
     private final Random rand = new Random();
 
     private Image rockImage;
     private Image treeImage;
+    private Image backgroundImage;
+    private Image wallImage;
+    private Image characterImage;
+    private Image CoinImage; 
 
-    private final int cellSize = 32;
+    private int cellSize = 32;
 
     public Obstacle(int width, int height) {
         this.width = width;
@@ -23,6 +27,10 @@ public class Obstacle extends JPanel {
         // Load images
         rockImage = loadImage("desert_rock1.png");
         treeImage = loadImage("birch_1.png");
+        backgroundImage = loadImage("grass.png");
+        wallImage = loadImage("walls.png");
+        characterImage = loadImage("Enemy.png");
+        CoinImage = loadImage("Coin.png"); 
 
         setPreferredSize(new Dimension(width * cellSize, height * cellSize));
     }
@@ -30,7 +38,7 @@ public class Obstacle extends JPanel {
     private Image loadImage(String filename) {
         ImageIcon icon = new ImageIcon(filename);
         if (icon.getIconWidth() == -1) {
-            System.out.println(" Could not load image: " + filename);
+            System.out.println("Could not load image: " + filename);
             return null;
         }
         return icon.getImage();
@@ -44,7 +52,6 @@ public class Obstacle extends JPanel {
         }
 
         carvePath(1, 1);
-
         maze[1][0] = 'S';
         maze[height - 2][width - 1] = 'E';
     }
@@ -89,63 +96,110 @@ public class Obstacle extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // 🌿 Background
-        g2.setColor(new Color(60, 160, 80));
-        g2.fillRect(0, 0, getWidth(), getHeight());
+        int panelWidth = getWidth();
+        int panelHeight = getHeight();
 
-        // 🟨 Draw raised 3D paths
+        // Dynamically adjust cell size
+        cellSize = Math.min(panelWidth / width, panelHeight / height);
+
+        // Center maze area
+        int mazeWidth = cellSize * width;
+        int mazeHeight = cellSize * height;
+        int offsetX = (panelWidth - mazeWidth) / 2;
+        int offsetY = (panelHeight - mazeHeight) / 2;
+
+        //  Tile the background
+        if (backgroundImage != null) {
+            int imgWidth = backgroundImage.getWidth(this);
+            int imgHeight = backgroundImage.getHeight(this);
+            for (int y = 0; y < getHeight(); y += imgHeight) {
+                for (int x = 0; x < getWidth(); x += imgWidth) {
+                    g2.drawImage(backgroundImage, x, y, this);
+                }
+            }
+        } else {
+            g2.setColor(new Color(60, 160, 80));
+            g2.fillRect(0, 0, getWidth(), getHeight());
+        }
+
+        // Draw maze & border walls
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
+                int px = offsetX + x * cellSize;
+                int py = offsetY + y * cellSize;
                 char c = maze[y][x];
-                int px = x * cellSize;
-                int py = y * cellSize;
+                boolean isBorderCell = (y == 0 || y == height - 1 || x == 0 || x == width - 1);
 
+                // Draw border walls
+                if (isBorderCell) {
+                    int smallerHeight = (int) (cellSize * 0.7);
+                    if (wallImage != null) {
+                        if (y == 0)
+                            g2.drawImage(wallImage, px, py + (cellSize - smallerHeight), cellSize, smallerHeight, this);
+                        else if (y == height - 1)
+                            g2.drawImage(wallImage, px, py, cellSize, smallerHeight, this);
+                        else
+                            g2.drawImage(wallImage, px, py, cellSize, cellSize, this);
+                    }
+                    continue;
+                }
+
+                // Draw open maze paths
                 if (c == ' ') {
-                    // Shadow (bottom/right edge)
-                    g2.setColor(new Color(170, 150, 70)); // darker shade
-                    g2.fillRect(px + 3, py + 3, cellSize, cellSize);
-
-                    // Highlighted top
-                    GradientPaint gp = new GradientPaint(px, py,
-                            new Color(255, 250, 180),
-                            px + cellSize, py + cellSize,
-                            new Color(220, 200, 100));
-                    g2.setPaint(gp);
-                    g2.fillRoundRect(px, py, cellSize - 2, cellSize - 2, 6, 6);
+                    g2.setColor(new Color(255, 255, 200));
+                    g2.fillRect(px, py, cellSize, cellSize);
                 } else if (c == 'S') {
                     g2.setColor(Color.GREEN);
-                    g2.fillOval(px + 8, py + 8, 16, 16);
+                    g2.fillOval(px + cellSize / 4, py + cellSize / 4, cellSize / 2, cellSize / 2);
                 } else if (c == 'E') {
                     g2.setColor(Color.RED);
-                    g2.fillOval(px + 8, py + 8, 16, 16);
+                    g2.fillOval(px + cellSize / 4, py + cellSize / 4, cellSize / 2, cellSize / 2);
                 }
             }
         }
 
-        //  3 trees + 3 rocks in corner
-        int startX = (width - 6) * cellSize;
-        int startY = (height - 2) * cellSize;
-
-        for (int i = 0; i < 3; i++) {
-            if (rockImage != null)
-                g2.drawImage(rockImage, startX + (i * cellSize), startY, cellSize, cellSize, this);
+        //  Add random coins
+        if (CoinImage != null) {
+            for (int y = 1; y < height - 1; y++) {
+                for (int x = 1; x < width - 1; x++) {
+                    if (maze[y][x] == ' ' && rand.nextDouble() < 0.15) { 
+                        int px = offsetX + x * cellSize;
+                        int py = offsetY + y * cellSize;
+                        int decoSize = (int) (cellSize * 0.6);
+                        int offset = (cellSize - decoSize) / 2;
+                        g2.drawImage(CoinImage, px + offset, py + offset, decoSize, decoSize, this);
+                    }
+                }
+            }
         }
 
-        for (int i = 0; i < 3; i++) {
-            if (treeImage != null)
-                g2.drawImage(treeImage, startX + (i * cellSize), startY - cellSize, cellSize, cellSize, this);
+        //  Draw grid overlay
+        g2.setColor(new Color(0, 0, 0, 50));
+        for (int x = 0; x <= width; x++) {
+            int px = offsetX + x * cellSize;
+            g2.drawLine(px, offsetY, px, offsetY + mazeHeight);
+        }
+        for (int y = 0; y <= height; y++) {
+            int py = offsetY + y * cellSize;
+            g2.drawLine(offsetX, py, offsetX + mazeWidth, py);
         }
     }
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Maze with 3D Paths");
+        JFrame frame = new JFrame("Maze1");
         Obstacle mazePanel = new Obstacle(21, 15);
 
         frame.add(mazePanel);
-        frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
+
+        frame.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentResized(java.awt.event.ComponentEvent e) {
+                mazePanel.repaint();
+            }
+        });
     }
 }
 
