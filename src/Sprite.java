@@ -50,9 +50,6 @@ public abstract class Sprite {
 	    if (x < 0) {
 	        x = 0;
 	    } 
-	    if (x > windowWidth) {
-	    	x = windowWidth;
-	    }
 	}
 	
 	public void updateY(int delta) {
@@ -64,9 +61,6 @@ public abstract class Sprite {
 	    if (y < 0) {
 	        y = 0;
 	    } 
-	    if (y > windowHeight) {
-	    	y = windowHeight;
-	    }
 	}
 	
 	public void update() {
