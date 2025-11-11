@@ -72,6 +72,7 @@ public class TitleScreen extends Game implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == startButton) {
 			startButton.setVisible(false);
+			title.setVisible(false);
 			showingCharacterSelect = true;
 		}
 		
