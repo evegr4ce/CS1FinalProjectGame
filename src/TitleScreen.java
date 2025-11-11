@@ -12,6 +12,8 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 public class TitleScreen extends Game implements ActionListener{
@@ -20,22 +22,36 @@ public class TitleScreen extends Game implements ActionListener{
 	private JButton testCharacter;
 	private BufferedImage titleImage;
 	private Image scaledTitleImage;
+	private JLabel title;
+	private boolean showingCharacterSelect;
+	
+	JPanel charsPanel;
 	
 	public TitleScreen() {
 		super();
 		
 		try {
-			titleImage = ImageIO.read(new File("Title.png"));
-			scaledTitleImage = titleImage.getScaledInstance(400, -1, Image.SCALE_SMOOTH);
+			titleImage = ImageIO.read(new File("adventureGame.png"));
+			scaledTitleImage = titleImage.getScaledInstance(700, -1, Image.SCALE_SMOOTH);
+			title = new JLabel((new ImageIcon(scaledTitleImage)));
 		} catch (IOException e) {
 			e.printStackTrace();
             System.out.println(e.getMessage());
 		}
 		
-		ImageIcon startIcon = new ImageIcon("startButton.png");
+		ImageIcon startIcon = new ImageIcon("start.png");
 		startButton = createButton(startIcon);
 		startButton.addActionListener(this);
-		//add(startButton);
+		
+		int x = (Game.getWindowWidth() - scaledTitleImage.getWidth(null)) /2;
+        int y = (Game.getWindowHeight() - scaledTitleImage.getHeight(null)) / 2;
+        
+		title.setBounds(x, y, scaledTitleImage.getWidth(null), scaledTitleImage.getHeight(null));
+		add(startButton, -1);
+		add(title, -1);
+		
+		charsPanel = new JPanel();
+		add(charsPanel, -1);
 		
 	}
 	
@@ -56,7 +72,11 @@ public class TitleScreen extends Game implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == startButton) {
 			startButton.setVisible(false);
+			showingCharacterSelect = true;
 		}
+		
+		charsPanel.setOpaque(false);
+        charsPanel.setBounds(0, 0, Game.getWindowWidth(), Game.getWindowHeight());
 		
 		ImageIcon icon1 = new ImageIcon("test.png");
         ImageIcon icon2 = new ImageIcon("test.png");
@@ -78,65 +98,20 @@ public class TitleScreen extends Game implements ActionListener{
         }
         
         int totalWidth = 3 * targetWidth + 2 * spacing;
-        int startX = (getWidth() - totalWidth) / 2;
+        int startX = (Game.getWindowWidth() - totalWidth) / 2;
         int y = 250; 
 		
 		
 		for (int i = 0; i < 3; i++) {
-	        int x = startX + i * (targetWidth + spacing);
+	        int x = startX + ( i * (targetWidth + spacing));
 	        chars[i].setBounds(x, y, targetWidth, targetHeight);
-	        getContentPane().add(chars[i]);
+	        charsPanel.add(chars[i], -1);
 	    }
-        
-        getContentPane().revalidate();
-        getContentPane().repaint();
 	}
 	
 
 	@Override
-	public void setBackground() {
-		BackgroundPanel backgroundPanel = new BackgroundPanel("titlescreen.jpg");
-        backgroundPanel.setLayout(null); 
-		setContentPane(backgroundPanel);
-        backgroundPanel.add(startButton);
+	public BackgroundPanel setBackground() {
+		return new BackgroundPanel("titlescreen.jpg");
 	}
-	
-	/**
-	public void paintComponent(Graphics g) {
-		super.paint(g);
-		
-		if (titleImage != null) {
-            g.drawImage(titleImage, (getWidth() - titleImage.getWidth()) / 2, 20, null);
-        }
-	}
-	*/
-	
-
-	@Override
-	public void paint(Graphics g) {   //added this
-	    super.paint(g);
-
-	    if (titleImage != null) {
-	        int x = (getWidth() - scaledTitleImage.getWidth(null)) /2;
-	        int y = (getHeight() - scaledTitleImage.getHeight(null)) / 2;
-	        
-	        g.drawImage(scaledTitleImage, x, y, this);
-	    }
-	}
-
-
-	
-	 public static void main(String[] args) {
-		 SwingUtilities.invokeLater(() -> {
-		        TitleScreen titleScreen = new TitleScreen();
-		        titleScreen.setTitle("Title Screen Test");
-		        titleScreen.setSize(800, 600);
-		        titleScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		        titleScreen.setLayout(null);
-		        titleScreen.repaint();
-		        titleScreen.setBackground();
-		        titleScreen.setVisible(true);
-		    });
-
-	 }
 }

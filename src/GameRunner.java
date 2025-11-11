@@ -3,14 +3,14 @@ import javax.swing.JFrame;
 public class GameRunner {
 
 	public static void main(String[] args) {
-		TitleScreen game = new TitleScreen();
+		MushroomLevelBossFight game = new MushroomLevelBossFight();
 		
-		Hero h = new Hero("test.png", 50, 50, 10, "Test");
-        game.addHero(h);
-        game.run();
-		
-		// Game level1 = new LevelOne();
-
+		Hero hero = new Hero("test.png", 100, 300, 10, "Test Hero");
+        Enemy boss = new Enemy("test.png", 200, 100, 10, 50);
+        game.addHero(hero);
+        game.addEnemy(boss);
+        boss.activate();
+        
+        new Thread(() -> game.run()).start();
 	}
-
 }

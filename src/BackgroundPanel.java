@@ -10,7 +10,7 @@ import java.awt.*;
 public class BackgroundPanel extends JPanel {
 
 	private static final long serialVersionUID = -590708273272753510L;
-	private BufferedImage backgroundImage;
+	private static Image backgroundImage;
 
 	public BackgroundPanel(String file) {
 		try {
@@ -20,12 +20,8 @@ public class BackgroundPanel extends JPanel {
             System.out.println(e.getMessage());
         }
     }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        if (backgroundImage != null) {
-            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
-        }
-    }
+	
+	public Image getBackgroundImage() {
+		return backgroundImage;
+	}
 }

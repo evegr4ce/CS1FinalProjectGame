@@ -4,29 +4,35 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-public class IslandScreen extends JPanel implements ActionListener{
+public class IslandScreen extends Game implements ActionListener{
 
     private JButton mushroomButton;
     private JButton crystalButton;
     private JButton iceButton;
     
     public IslandScreen() {
+    	super();
+    	addButtons();
+    }
+    
+    public void addButtons() {
+ 
     	setLayout(null); 
     	
     	ImageIcon mushroomIcon = new ImageIcon("Mushroom.png");
     	mushroomButton = createButton(mushroomIcon, 100, 100);
     	mushroomButton.addActionListener(this);
-    	add(mushroomButton);
+    	add(mushroomButton, -1);
     	
     	ImageIcon crystalIcon = new ImageIcon("Crystal.png");
     	crystalButton = createButton(crystalIcon, 850,300);
     	crystalButton.addActionListener(this);
-    	add(crystalButton);
+    	add(crystalButton, -1);
     	
     	ImageIcon iceIcon = new ImageIcon("Ice.png");
     	iceButton = createButton(iceIcon, 150, 550);
     	iceButton.addActionListener(this);
-    	add(iceButton);
+    	add(iceButton, -1);
     }
     
     private JButton createButton(ImageIcon icon, int x, int y) {
@@ -36,8 +42,8 @@ public class IslandScreen extends JPanel implements ActionListener{
     	JButton button = new JButton(scaledIcon);
     	button.setBounds(x,y,150,150);
     	
-    	//button.setBorderPainted(false);
-        //button.setContentAreaFilled(false);
+    	button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
     	
     	return button;
     }
@@ -54,18 +60,9 @@ public class IslandScreen extends JPanel implements ActionListener{
     	}
     	
     }
-    
-    //TO TEST
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Island Screen Test");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            IslandScreen islandScreen = new IslandScreen();
-            frame.setContentPane(islandScreen);
-            frame.setSize(1280, 768);
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
-        });
-    }
+	@Override
+	public BackgroundPanel setBackground() {
+		return new BackgroundPanel("islandscreen.jpg");
+	}
 }
