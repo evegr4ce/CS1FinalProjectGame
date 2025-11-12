@@ -1,17 +1,20 @@
 import java.awt.Image;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 
 /**
  * MushroomLevelBossFight where plays must attack the boss 3 times
  * in order to complete the level
  */
-public class MushroomLevelBossFight extends Game {
+public class MushroomLevelBossFight extends Game implements ActionListener{
 
 	private static Game currentLevel;
 	private JLabel[] hearts = new JLabel[3]; //Array to hold heart labels of the boss
@@ -19,6 +22,7 @@ public class MushroomLevelBossFight extends Game {
 	private JLabel levelComplete; //Label to show when boss is attacked 3 times
 	private boolean bossHit = false; //Tracks if boss has been attacked
 	private boolean wasAttacking = false; //Tracks if hero was attacking
+	private JButton continueButton; //Continue button to leave boss fight once won
 	
 	/**
 	 * Constructor for MushroomLevelBossFight
@@ -28,6 +32,7 @@ public class MushroomLevelBossFight extends Game {
 		currentLevel = this;
 		addHearts();
 		addLevelComplete();
+		addContinueButton();
 	}
 	
 	/**
@@ -82,6 +87,29 @@ public class MushroomLevelBossFight extends Game {
 	    levelComplete.setBounds((getWindowWidth() - width) / 2, (getWindowHeight() - height) / 2, width, height);
 	    levelComplete.setVisible(false);
 	    getContentPane().add(levelComplete);
+	   
+	}
+	
+	/**
+	 * Adds a continue button to the screen when boss is defeated
+	 * Hidden then shown when boss health is 0
+	 */
+	private void addContinueButton() {
+		ImageIcon continueIcon = new ImageIcon("continue.png");
+        continueButton = createButton(continueIcon);
+        continueButton.addActionListener(this);
+        
+        int buttonWidth = 150;
+        int buttonHeight = 100;
+        
+        int buttonX = (getWindowWidth() - buttonWidth) / 2;
+        int buttonY = levelComplete.getY() + levelComplete.getHeight() + 20;
+        
+        continueButton.setBounds(buttonX, buttonY, buttonWidth, buttonHeight);
+        
+        continueButton.setVisible(false);
+        getContentPane().add(continueButton);
+       
 	}
 
 	/**
@@ -102,6 +130,7 @@ public class MushroomLevelBossFight extends Game {
 
 	        if (bossHealth == 0) {
 	            levelComplete.setVisible(true); //Show level complete label
+	            continueButton.setVisible(true);
 	            for (Sprite s : getAll_sprites()) {
 	                if (s instanceof Enemy) { //Move the boss off screen so its not shown
 	                    s.setX(-1000);
@@ -121,6 +150,8 @@ public class MushroomLevelBossFight extends Game {
     public void showLevelComplete() {
         levelComplete.setVisible(true);
         levelComplete.repaint();
+        
+        continueButton.setVisible(true);
     }
 
     /**
@@ -145,6 +176,31 @@ public class MushroomLevelBossFight extends Game {
         if (!hero.isAttacking()) {
             bossHit = false; //reset the boolean
         }
+    }
+    
+    /**
+     * Creates a button using icon image
+     * @param icon
+     * @return a new button with icon
+     */
+    private JButton createButton(ImageIcon icon) {
+		Image scaledImage = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+		ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+		JButton button = new JButton(scaledIcon);
+		button.setBounds(325, 400, 150, 150);
+
+		button.setBorderPainted(false);
+		button.setContentAreaFilled(false);
+		button.setFocusPainted(false);
+
+		return button;
+	}
+    
+    public void actionPerformed(ActionEvent e) {
+    	if (e.getSource() == continueButton) {
+    		setRunning(false);
+    	}
     }
 
 }

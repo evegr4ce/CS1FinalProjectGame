@@ -22,27 +22,27 @@ public class IslandScreen extends Game implements ActionListener{
     	setLayout(null); 
     	
     	ImageIcon mushroomIcon = new ImageIcon("Mushroom.png");
-    	mushroomButton = createButton(mushroomIcon, 100, 100);
+    	mushroomButton = createButton(mushroomIcon, 50, 50);
     	mushroomButton.addActionListener(this);
     	add(mushroomButton, -1);
     	
     	ImageIcon crystalIcon = new ImageIcon("Crystal.png");
-    	crystalButton = createButton(crystalIcon, 400,350);
+    	crystalButton = createButton(crystalIcon, 250, 300);
     	crystalButton.addActionListener(this);
     	add(crystalButton, -1);
     	
     	ImageIcon iceIcon = new ImageIcon("Ice.png");
-    	iceButton = createButton(iceIcon, 600, 100);
+    	iceButton = createButton(iceIcon, 490, 50);
     	iceButton.addActionListener(this);
     	add(iceButton, -1);
     }
     
     private JButton createButton(ImageIcon icon, int x, int y) {
-    	Image scaledImage = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+    	Image scaledImage = icon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
     	
     	JButton button = new JButton(scaledIcon);
-    	button.setBounds(x,y,150,150);
+    	button.setBounds(x,y,250,250);
     	
     	button.setBorderPainted(false);
         button.setContentAreaFilled(false);
