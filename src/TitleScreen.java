@@ -50,8 +50,6 @@ public class TitleScreen extends Game implements ActionListener{
 		add(title, -1);
 
 		charsPanel = new JPanel();
-		charsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-		charsPanel.setOpaque(false);
 		add(charsPanel, -1);
 
 	}
@@ -61,7 +59,7 @@ public class TitleScreen extends Game implements ActionListener{
 		ImageIcon scaledIcon = new ImageIcon(scaledImage);
 
 		JButton button = new JButton(scaledIcon);
-		//button.setBounds(325, 400, 150, 150);
+		button.setBounds(325, 400, 150, 150);
 
 		button.setBorderPainted(false);
 		button.setContentAreaFilled(false);
@@ -77,10 +75,9 @@ public class TitleScreen extends Game implements ActionListener{
 			showingCharacterSelect = true;
 		}
 
-		//charsPanel.setOpaque(false);
-        //charsPanel.setBounds(0, 0, Game.getWindowWidth(), Game.getWindowHeight());
-		//charsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-		
+		charsPanel.setOpaque(false);
+        charsPanel.setBounds(0, 0, Game.getWindowWidth(), Game.getWindowHeight());
+
 		ImageIcon icon1 = new ImageIcon("test.png");
         ImageIcon icon2 = new ImageIcon("test.png");
         ImageIcon icon3 = new ImageIcon("test.png");
@@ -98,15 +95,8 @@ public class TitleScreen extends Game implements ActionListener{
             chars[i].setBorderPainted(false);
             chars[i].setContentAreaFilled(false);
             chars[i].setFocusPainted(false);
-            chars[i].addActionListener(this);
-            charsPanel.add(chars[i]);
-            
         }
-        
-        charsPanel.revalidate();
-        charsPanel.repaint();
 
-        /**
         int totalWidth = 3 * targetWidth + 2 * spacing;
         int startX = (Game.getWindowWidth() - totalWidth) / 2;
         int y = 250; 
@@ -117,22 +107,6 @@ public class TitleScreen extends Game implements ActionListener{
 	        chars[i].setBounds(x, y, targetWidth, targetHeight);
 	        charsPanel.add(chars[i], -1);
 	    }
-	    */
-        
-        
-		
-		if (e.getSource() == chars[0]) {
-			setRunning(false);
-		}
-		
-		if (e.getSource() == chars[1]) {
-			setRunning(false);
-		}
-		
-		if (e.getSource() == chars[2]) {
-			setRunning(false);
-		}
-		
 	}
 	
 
