@@ -10,6 +10,8 @@ public class IslandScreen extends Game implements ActionListener{
     private JButton crystalButton;
     private JButton iceButton;
     
+    private int chosenIsland;
+    
     public IslandScreen() {
     	super();
     	addButtons();
@@ -25,12 +27,12 @@ public class IslandScreen extends Game implements ActionListener{
     	add(mushroomButton, -1);
     	
     	ImageIcon crystalIcon = new ImageIcon("Crystal.png");
-    	crystalButton = createButton(crystalIcon, 850,300);
+    	crystalButton = createButton(crystalIcon, 400,350);
     	crystalButton.addActionListener(this);
     	add(crystalButton, -1);
     	
     	ImageIcon iceIcon = new ImageIcon("Ice.png");
-    	iceButton = createButton(iceIcon, 150, 550);
+    	iceButton = createButton(iceIcon, 600, 100);
     	iceButton.addActionListener(this);
     	add(iceButton, -1);
     }
@@ -50,19 +52,29 @@ public class IslandScreen extends Game implements ActionListener{
     
     public void actionPerformed(ActionEvent e) {
     	if(e.getSource() == mushroomButton) {
-    		//
+    		setChosenIsland(1);
+    		setRunning(false);
     	}
     	else if (e.getSource() == crystalButton) {
-    		//
+    		setChosenIsland(2);
+    		setRunning(false);
     	}
     	else if (e.getSource() == iceButton) {
-    		//
+    		setChosenIsland(3);
+    		setRunning(false);
     	}
-    	
     }
 
 	@Override
 	public BackgroundPanel setBackground() {
 		return new BackgroundPanel("islandscreen.jpg");
+	}
+
+	public int getChosenIsland() {
+		return chosenIsland;
+	}
+
+	public void setChosenIsland(int chosenIsland) {
+		this.chosenIsland = chosenIsland;
 	}
 }
