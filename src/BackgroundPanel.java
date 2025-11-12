@@ -10,7 +10,7 @@ import java.awt.*;
 public class BackgroundPanel extends JPanel {
 
 	private static final long serialVersionUID = -590708273272753510L;
-	private static Image backgroundImage;
+	private static BufferedImage backgroundImage;
 
 	public BackgroundPanel(String file) {
 		try {

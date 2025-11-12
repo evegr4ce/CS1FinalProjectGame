@@ -30,12 +30,13 @@ public abstract class Game extends JFrame {
 	JLayeredPane characters;
 	GamePanel gamePanel; 
 	
-	private ArrayList<Enemy> enemies;
+	protected ArrayList<Enemy> enemies;
 	private ArrayList<Item> items;
 	private ArrayList<Obstacle> obstacles;
-	private ArrayList<Sprite> all_sprites;
+	protected ArrayList<Sprite> all_sprites;
 	
-	private Hero hero;
+	protected Hero hero;
+	
 	
 	public Game() {
 		
@@ -45,6 +46,7 @@ public abstract class Game extends JFrame {
 		all_sprites = new ArrayList<Sprite>();
 		
 		characters = new JLayeredPane();
+		
 	}
 	
 	public void addHero(Hero h) {
@@ -113,6 +115,8 @@ public abstract class Game extends JFrame {
      
         gamePanel.setVisible(true);
         setVisible(true);
+
+        gamePanel.setFocusable(true);
         
         requestFocusInWindow();
         input = new InputHandler(this);
@@ -124,13 +128,17 @@ public abstract class Game extends JFrame {
      */
     public abstract BackgroundPanel setBackground();
     
+    public static Game getCurrentLevel() {
+        return null; 
+    }
+    
     class GamePanel extends JPanel {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 
             if (backgroundImage != null) {
-                g.drawImage(backgroundImage, 0, 0, null);
+                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
             }
 
             // Draw sprites
@@ -146,6 +154,9 @@ public abstract class Game extends JFrame {
      */
     void update() {
 
+    	if (hero == null) return;
+
+    	
         if (input.isKeyDown(KeyEvent.VK_LEFT)) {
             hero.moveLeft();
         }
@@ -161,6 +172,12 @@ public abstract class Game extends JFrame {
         if (input.isKeyDown(KeyEvent.VK_ESCAPE)) {
             System.exit(0);
         }
+        if (input.isKeyDown(KeyEvent.VK_SPACE)) {
+            hero.attack();
+        } else {
+            hero.resetAttack();
+        }
+
 
         // Perform all Sprite updates
         checkCollisions();
@@ -169,7 +186,8 @@ public abstract class Game extends JFrame {
         }
     }
     
-    void checkCollisions() {
+    
+    protected void checkCollisions() {
     	ArrayList<Sprite> removal = new ArrayList<>();
     	
     	for (Sprite s : all_sprites) {
@@ -189,6 +207,7 @@ public abstract class Game extends JFrame {
     	}
     }
 
+
     /**
      * This method will draw everything
      */
@@ -203,4 +222,5 @@ public abstract class Game extends JFrame {
     public static int getWindowWidth() {
     	return WINDOW_WIDTH;
     }
+    
 }

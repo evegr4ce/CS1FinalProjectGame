@@ -1,13 +1,18 @@
-import java.awt.event.KeyEvent;
-
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 public class MushroomLevelBossFight extends Game {
 
+	private static Game currentLevel;
+	
 	public MushroomLevelBossFight() {
 		super();
+		currentLevel = this;
 	}
+	
+	public static Game getCurrentLevel() {
+        return currentLevel;
+    }
 	
 	@Override
 	public BackgroundPanel setBackground() {

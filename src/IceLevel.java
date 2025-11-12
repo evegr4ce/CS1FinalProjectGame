@@ -9,7 +9,10 @@ public class IceLevel extends Game {
 	}
 
 	@Override
-	public BackgroundPanel setBackground() {
-		return new BackgroundPanel("game_background_1.png");
+	public void setBackground() {
+		BackgroundPanel backgroundPanel = new BackgroundPanel("islandscreen.jpg");
+        setContentPane(backgroundPanel);
 	}
+	
+	
 }

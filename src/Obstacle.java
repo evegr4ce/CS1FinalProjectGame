@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.Random;
 
 public class Obstacle extends JPanel {
@@ -11,14 +9,14 @@ public class Obstacle extends JPanel {
     private char[][] maze;
     private final Random rand = new Random();
 
+    private Image rockImage;
+    private Image treeImage;
     private Image backgroundImage;
     private Image wallImage;
+    private Image characterImage;
+    private Image CoinImage; 
 
     private int cellSize = 32;
-
-    // Player position
-    private int playerX = 1;
-    private int playerY = 1;
 
     public Obstacle(int width, int height) {
         this.width = width;
@@ -26,20 +24,15 @@ public class Obstacle extends JPanel {
         this.maze = new char[height][width];
         generateObstacle();
 
-       
+        // Load images
+        rockImage = loadImage("desert_rock1.png");
+        treeImage = loadImage("birch_1.png");
         backgroundImage = loadImage("grass.png");
         wallImage = loadImage("walls.png");
+        characterImage = loadImage("Enemy.png");
+        CoinImage = loadImage("Coin.png"); 
 
         setPreferredSize(new Dimension(width * cellSize, height * cellSize));
-        setFocusable(true);
-        requestFocusInWindow();
-
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                movePlayer(e.getKeyCode());
-            }
-        });
     }
 
     private Image loadImage(String filename) {
@@ -96,32 +89,26 @@ public class Obstacle extends JPanel {
         }
     }
 
-    private void movePlayer(int keyCode) {
-        int newX = playerX;
-        int newY = playerY;
-
-        switch (keyCode) {
-            case KeyEvent.VK_UP -> newY--;
-            case KeyEvent.VK_DOWN -> newY++;
-            case KeyEvent.VK_LEFT -> newX--;
-            case KeyEvent.VK_RIGHT -> newX++;
-        }
-
-        if (newX >= 0 && newX < width && newY >= 0 && newY < height && maze[newY][newX] != '#') {
-            playerX = newX;
-            playerY = newY;
-        }
-
-        repaint();
-    }
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // Draw background tiled
+        int panelWidth = getWidth();
+        int panelHeight = getHeight();
+
+        // Dynamically adjust cell size
+        cellSize = Math.min(panelWidth / width, panelHeight / height);
+
+        // Center maze area
+        int mazeWidth = cellSize * width;
+        int mazeHeight = cellSize * height;
+        int offsetX = (panelWidth - mazeWidth) / 2;
+        int offsetY = (panelHeight - mazeHeight) / 2;
+
+        //  Tile the background
         if (backgroundImage != null) {
             int imgWidth = backgroundImage.getWidth(this);
             int imgHeight = backgroundImage.getHeight(this);
@@ -135,29 +122,29 @@ public class Obstacle extends JPanel {
             g2.fillRect(0, 0, getWidth(), getHeight());
         }
 
-        // Draw maze grid
-        int mazeWidth = width * cellSize;
-        int mazeHeight = height * cellSize;
-
+        // Draw maze & border walls
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                int px = x * cellSize;
-                int py = y * cellSize;
+                int px = offsetX + x * cellSize;
+                int py = offsetY + y * cellSize;
                 char c = maze[y][x];
-
                 boolean isBorderCell = (y == 0 || y == height - 1 || x == 0 || x == width - 1);
 
-                if (isBorderCell && wallImage != null) {
-                    int smallerHeight = (int) (cellSize * 0.8);
-                    if (y == 0)
-                        g2.drawImage(wallImage, px, py + (cellSize - smallerHeight), cellSize, smallerHeight, this);
-                    else if (y == height - 1)
-                        g2.drawImage(wallImage, px, py, cellSize, smallerHeight, this);
-                    else
-                        g2.drawImage(wallImage, px, py, cellSize, cellSize, this);
+                // Draw border walls
+                if (isBorderCell) {
+                    int smallerHeight = (int) (cellSize * 0.7);
+                    if (wallImage != null) {
+                        if (y == 0)
+                            g2.drawImage(wallImage, px, py + (cellSize - smallerHeight), cellSize, smallerHeight, this);
+                        else if (y == height - 1)
+                            g2.drawImage(wallImage, px, py, cellSize, smallerHeight, this);
+                        else
+                            g2.drawImage(wallImage, px, py, cellSize, cellSize, this);
+                    }
                     continue;
                 }
 
+                // Draw open maze paths
                 if (c == ' ') {
                     g2.setColor(new Color(255, 255, 200));
                     g2.fillRect(px, py, cellSize, cellSize);
@@ -171,32 +158,48 @@ public class Obstacle extends JPanel {
             }
         }
 
-        // Draw player
-        g2.setColor(Color.BLUE);
-        g2.fillOval(playerX * cellSize + cellSize / 4, playerY * cellSize + cellSize / 4, cellSize / 2, cellSize / 2);
+        //  Add random coins
+        if (CoinImage != null) {
+            for (int y = 1; y < height - 1; y++) {
+                for (int x = 1; x < width - 1; x++) {
+                    if (maze[y][x] == ' ' && rand.nextDouble() < 0.15) { 
+                        int px = offsetX + x * cellSize;
+                        int py = offsetY + y * cellSize;
+                        int decoSize = (int) (cellSize * 0.6);
+                        int offset = (cellSize - decoSize) / 2;
+                        g2.drawImage(CoinImage, px + offset, py + offset, decoSize, decoSize, this);
+                    }
+                }
+            }
+        }
 
-        // Grid overlay
-        g2.setColor(new Color(0, 0, 0, 60));
+        //  Draw grid overlay
+        g2.setColor(new Color(0, 0, 0, 50));
         for (int x = 0; x <= width; x++) {
-            g2.drawLine(x * cellSize, 0, x * cellSize, mazeHeight);
+            int px = offsetX + x * cellSize;
+            g2.drawLine(px, offsetY, px, offsetY + mazeHeight);
         }
         for (int y = 0; y <= height; y++) {
-            g2.drawLine(0, y * cellSize, mazeWidth, y * cellSize);
+            int py = offsetY + y * cellSize;
+            g2.drawLine(offsetX, py, offsetX + mazeWidth, py);
         }
     }
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Maze Window");
+        JFrame frame = new JFrame("Maze1");
         Obstacle mazePanel = new Obstacle(21, 15);
 
         frame.add(mazePanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
 
-        
-        frame.setSize(700, 500);
-        frame.setLocation(100, 100); 
+        frame.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentResized(java.awt.event.ComponentEvent e) {
+                mazePanel.repaint();
+            }
+        });
     }
 }
 
