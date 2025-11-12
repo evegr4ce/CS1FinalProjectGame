@@ -102,15 +102,15 @@ public class MushroomLevelBossFight extends Game {
 
 	        if (bossHealth == 0) {
 	            levelComplete.setVisible(true); //Show level complete label
-	            for (Sprite s : all_sprites) {
+	            for (Sprite s : getAll_sprites()) {
 	                if (s instanceof Enemy) { //Move the boss off screen so its not shown
 	                    s.setX(-1000);
 	                    s.setY(-1000);
 	                }
 	            }
+	            
 	            getContentPane().revalidate();
 	            getContentPane().repaint();
-	            
 	        }
 	    });
 	}
@@ -131,7 +131,7 @@ public class MushroomLevelBossFight extends Game {
     protected void checkCollisions() {
         if (hero == null) return;
 
-        for (Sprite s : all_sprites) {
+        for (Sprite s : getAll_sprites()) {
             if (s instanceof Enemy) {
                 Enemy boss = (Enemy) s;
 

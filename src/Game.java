@@ -32,9 +32,8 @@ public abstract class Game extends JFrame {
 	
 	protected ArrayList<Enemy> enemies;
 	private ArrayList<Item> items;
-	private ArrayList<Obstacle> obstacles;
-	protected ArrayList<Sprite> all_sprites;
-	
+	private ArrayList<Sprite> all_sprites;
+
 	protected Hero hero;
 	
 	
@@ -42,7 +41,6 @@ public abstract class Game extends JFrame {
 		
 		enemies = new ArrayList<Enemy>();
 		items = new ArrayList<Item>();
-		obstacles = new ArrayList<Obstacle>();
 		all_sprites = new ArrayList<Sprite>();
 		
 		characters = new JLayeredPane();
@@ -225,6 +223,10 @@ public abstract class Game extends JFrame {
     
     public void setRunning(boolean isRunning) {
 		this.isRunning = isRunning;
+	}
+    
+    public ArrayList<Sprite> getAll_sprites() {
+		return all_sprites;
 	}
     
 }

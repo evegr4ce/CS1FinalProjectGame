@@ -11,12 +11,14 @@ public class Obstacle extends JPanel {
 
     private final Image backgroundImage;
     private final Image wallImage;
+    private Game level;
 
    
-    public Obstacle(int width, int height, String backgroundFile, String wallFile) {
+    public Obstacle(int width, int height, String backgroundFile, String wallFile, Game level) {
         this.width = width;
         this.height = height;
         this.maze = new char[height][width];
+        this.level = level;
 
         generateMaze();
 
@@ -105,6 +107,11 @@ public class Obstacle extends JPanel {
                     g2.fillOval(px + 8, py + 8, 16, 16);
                 }
             }
+        }
+        
+        // Draw sprites
+        for (Sprite sprite : level.getAll_sprites()) {
+        	sprite.draw(g);
         }
     }
 

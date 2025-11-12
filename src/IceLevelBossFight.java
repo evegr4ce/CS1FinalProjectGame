@@ -68,15 +68,14 @@ public class IceLevelBossFight extends Game {
 
 	        if (bossHealth == 0) {
 	            levelComplete.setVisible(true);
-	            for (Sprite s : all_sprites) {
+	            for (Sprite s : getAll_sprites()) {
 	                if (s instanceof Enemy) {
 	                    s.setX(-1000);
 	                    s.setY(-1000);
 	                }
 	            }
 	            getContentPane().revalidate();
-	            getContentPane().repaint();
-	            
+	            getContentPane().repaint();           
 	        }
 	    });
 	}
@@ -90,7 +89,7 @@ public class IceLevelBossFight extends Game {
     protected void checkCollisions() {
         if (hero == null) return;
 
-        for (Sprite s : all_sprites) {
+        for (Sprite s : getAll_sprites()) {
             if (s instanceof Enemy) {
                 Enemy boss = (Enemy) s;
 

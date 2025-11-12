@@ -24,47 +24,53 @@ public class GameRunner {
 				break;
 		}
 		
-		IslandScreen island = new IslandScreen();
-		island.run();
-		
-		switch(island.getChosenIsland()) {
-			case 1:
-				MushroomLevelBossFight level1 = new MushroomLevelBossFight();
-				
-				Enemy mushroomBoss = new Enemy("mushroomBoss.png", 200, 100, 10, 50);
-				mushroomBoss.activate();
-				
-				level1.addHero(h);
-				level1.addEnemy(mushroomBoss);
-				level1.run();
-				
-				break;
-			case 2:
-				CrystalLevelBossFight level2 = new CrystalLevelBossFight();
-				
-				Enemy crystalBoss = new Enemy("crystalBoss.png", 200, 100, 10, 50);
-				crystalBoss.activate();
-				
-				level2.addHero(h);
-				level2.addEnemy(crystalBoss);
-				
-				level2.run();
-				
-				break;
-			case 3:
-				IceLevelBossFight level3 = new IceLevelBossFight();
-				
-				Enemy iceBoss = new Enemy("iceBoss.png", 200, 100, 10, 50);
-				iceBoss.activate();
-				
-				level3.addHero(h);
-				level3.addEnemy(iceBoss);
-				
-				level3.run();
-				
-				break;
-			default:
-				System.exit(0);
+		while (true) {
+			IslandScreen island = new IslandScreen();
+			island.run();
+			
+			switch(island.getChosenIsland()) {
+				case 1:
+					MushroomLevel maze = new MushroomLevel();
+					maze.addHero(h);
+					maze.run();
+					
+					MushroomLevelBossFight level1 = new MushroomLevelBossFight();
+					
+					Enemy mushroomBoss = new Enemy("mushroomBoss.png", 200, 100, 10, 50);
+					mushroomBoss.activate();
+					
+					level1.addHero(h);
+					level1.addEnemy(mushroomBoss);
+					level1.run();
+					
+					break;
+				case 2:
+					CrystalLevelBossFight level2 = new CrystalLevelBossFight();
+					
+					Enemy crystalBoss = new Enemy("crystalBoss.png", 200, 100, 10, 50);
+					crystalBoss.activate();
+					
+					level2.addHero(h);
+					level2.addEnemy(crystalBoss);
+					
+					level2.run();
+					
+					break;
+				case 3:
+					IceLevelBossFight level3 = new IceLevelBossFight();
+					
+					Enemy iceBoss = new Enemy("iceBoss.png", 200, 100, 10, 50);
+					iceBoss.activate();
+					
+					level3.addHero(h);
+					level3.addEnemy(iceBoss);
+					
+					level3.run();
+					
+					break;
+				default:
+					System.exit(0);
+			}
 		}
 	}
 }
