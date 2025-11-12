@@ -2,15 +2,22 @@ import java.awt.*;
 
 import javax.swing.*;
 
+/**
+ * IceLevelBossFight where plays must attack the boss 3 times
+ * in order to complete the level
+ */
 public class IceLevelBossFight extends Game {
 
 	private static Game currentLevel;
-	private JLabel[] hearts = new JLabel[3];
-	private int bossHealth = 3;
-	private JLabel levelComplete;
-	private boolean bossHit = false;
-	private boolean wasAttacking = false;
+	private JLabel[] hearts = new JLabel[3]; //Array to hold heart labels of the boss
+	private int bossHealth = 3; //Boss health (3 times Hero must attack)
+	private JLabel levelComplete; //Label to show when boss is attacked 3 times
+	private boolean bossHit = false; //Tracks if boss has been attacked
+	private boolean wasAttacking = false; //Tracks if hero was attacking
 	
+	/**
+	 * Constructor for IceLevelBossFight
+	 */
 	public IceLevelBossFight() {
 		super();
 		currentLevel = this;
@@ -18,20 +25,31 @@ public class IceLevelBossFight extends Game {
 		addLevelComplete();
 	}
 
+	/**
+	 * Returns current game level
+	 * @return - the current level instance (MushroomLevelBossFight)
+	 */
 	public static Game getCurrentLevel() {
         return currentLevel;
     }
 	
+	/**
+	 * Sets the background image for boss fight
+	 */
 	@Override
 	public BackgroundPanel setBackground() {
 		return new BackgroundPanel("game_background_1.png");
 	}
 	
+	/**
+	 * Adds heart images to the screen as JLabels to represent Enemy life
+	 */
 	private void addHearts() {
 		ImageIcon originalHeart = new ImageIcon("HealthHeart.png");
 		int heartWidth = 50;
 		int heartHeight = 50;
 		
+		//Positions the 3 hearts
 		for (int i = 0; i < hearts.length; i++) {
 			Image scaled = originalHeart.getImage().getScaledInstance(heartWidth, heartHeight, java.awt.Image.SCALE_SMOOTH);
 			hearts[i] = new JLabel(new ImageIcon(scaled));
@@ -41,6 +59,10 @@ public class IceLevelBossFight extends Game {
 		}
 	}
 	
+	/**
+	 * Adds a Level Complete label to the screen when boss is defeated
+	 * Hidden then shown when boss health is 0
+	 */
 	private void addLevelComplete() {
 		ImageIcon original = new ImageIcon("LevelComplete.png");
 		int width = 400;
@@ -56,20 +78,25 @@ public class IceLevelBossFight extends Game {
 		getContentPane().add(levelComplete);
 	}
 	
+	/**
+	 * Decreases the boss health by one and updates the heart health on screen
+	 * If health is zero, the level complete is shown and the boss is positioned 
+	 * off the screen
+	 */
 	public void decrementBossHealth() {
 	    if (bossHealth <= 0) return;
 
 	    SwingUtilities.invokeLater(() -> {
-	        bossHealth--;
-	        hearts[bossHealth].setVisible(false);
+	        bossHealth--; //reduce boss health
+	        hearts[bossHealth].setVisible(false); //Hide the heart
 
 	        getContentPane().revalidate();
 	        getContentPane().repaint();
 
 	        if (bossHealth == 0) {
-	            levelComplete.setVisible(true);
+	            levelComplete.setVisible(true); //Show level complete level
 	            for (Sprite s : all_sprites) {
-	                if (s instanceof Enemy) {
+	                if (s instanceof Enemy) { //Move the boss off screen so its not shown
 	                    s.setX(-1000);
 	                    s.setY(-1000);
 	                }
@@ -81,11 +108,18 @@ public class IceLevelBossFight extends Game {
 	    });
 	}
 	
+	/**
+	 * Displays level complete message
+	 */
 	public void showLevelComplete() {
         levelComplete.setVisible(true);
         levelComplete.repaint();
     }
 	
+	/**
+     * Checks for collisions between enemy and hero
+     * If hero is overlapping and attacking, then the boss health goes down
+     */
 	@Override
     protected void checkCollisions() {
         if (hero == null) return;
@@ -95,14 +129,14 @@ public class IceLevelBossFight extends Game {
                 Enemy boss = (Enemy) s;
 
                 if (hero.isAttacking() && hero.overlaps(boss) && !bossHit) {
-                    bossHit = true;
+                    bossHit = true; //Helps prevent multiple hits
                     decrementBossHealth();
                 }
             }
         }
 
         if (!hero.isAttacking()) {
-            bossHit = false;
+            bossHit = false; //reset the boolean
         }
     }
 	
