@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
@@ -6,7 +8,7 @@ import javax.swing.*;
  * CrystalLevelBossFight where plays must attack the boss 3 times
  * in order to complete the level
  */
-public class CrystalLevelBossFight extends Game{
+public class CrystalLevelBossFight extends Game implements ActionListener{
 
 	private static Game currentLevel;
 	private JLabel[] hearts = new JLabel[3]; //Array to hold heart labels of the boss
@@ -14,6 +16,7 @@ public class CrystalLevelBossFight extends Game{
 	private JLabel levelComplete; //Label to show when boss is attacked 3 times
 	private boolean bossHit = false; //Tracks if boss has been attacked
 	private boolean wasAttacking = false; //Tracks if hero was attacking
+	private JButton continueButton; //Continue button to leave boss fight once won
 	
 	/**
 	 * Constructor for CrystalLevelBossFight
@@ -23,6 +26,7 @@ public class CrystalLevelBossFight extends Game{
 		currentLevel = this;
 		addHearts();
 		addLevelComplete();
+		addContinueButton();
 	}
 	
 	/**
@@ -79,6 +83,29 @@ public class CrystalLevelBossFight extends Game{
 	    levelComplete.setVisible(false);
 	    getContentPane().add(levelComplete);
 	}
+	
+
+	/**
+	 * Adds a continue button to the screen when boss is defeated
+	 * Hidden then shown when boss health is 0
+	 */
+	private void addContinueButton() {
+		ImageIcon continueIcon = new ImageIcon("continue.png");
+        continueButton = createButton(continueIcon);
+        continueButton.addActionListener(this);
+        
+        int buttonWidth = 150;
+        int buttonHeight = 100;
+        
+        int buttonX = (getWindowWidth() - buttonWidth) / 2;
+        int buttonY = levelComplete.getY() + levelComplete.getHeight() + 20;
+        
+        continueButton.setBounds(buttonX, buttonY, buttonWidth, buttonHeight);
+        
+        continueButton.setVisible(false);
+        getContentPane().add(continueButton);
+       
+	}
 
 	/**
 	 * Decreases the boss health by one and updates the heart health on screen
@@ -98,6 +125,7 @@ public class CrystalLevelBossFight extends Game{
 
 	        if (bossHealth == 0) {
 	            levelComplete.setVisible(true); //Show level complete label
+	            continueButton.setVisible(true);
 	            for (Sprite s : all_sprites) { 
 	                if (s instanceof Enemy) { //Move the boss off screen so its not shown
 	                    s.setX(-1000);
@@ -117,6 +145,8 @@ public class CrystalLevelBossFight extends Game{
     public void showLevelComplete() {
         levelComplete.setVisible(true);
         levelComplete.repaint();
+        
+        continueButton.setVisible(true);
     }
 
 
@@ -142,6 +172,30 @@ public class CrystalLevelBossFight extends Game{
         if (!hero.isAttacking()) {
             bossHit = false; //reset the boolean
         }
+    }
+    /**
+     * Creates a button using icon image
+     * @param icon
+     * @return a new button with icon
+     */
+    private JButton createButton(ImageIcon icon) {
+		Image scaledImage = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+		ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+		JButton button = new JButton(scaledIcon);
+		button.setBounds(325, 400, 150, 150);
+
+		button.setBorderPainted(false);
+		button.setContentAreaFilled(false);
+		button.setFocusPainted(false);
+
+		return button;
+	}
+    
+    public void actionPerformed(ActionEvent e) {
+    	if (e.getSource() == continueButton) {
+    		setRunning(false);
+    	}
     }
 	
 }
