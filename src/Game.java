@@ -20,11 +20,11 @@ import java.util.ArrayList;
 public abstract class Game extends JFrame {
 	private boolean isRunning = true;
 	private int fps = 60;
+	
 	private static final int WINDOW_WIDTH = 800;
 	private static final int WINDOW_HEIGHT = 600;
 
 	private Image backgroundImage;
-	private Insets insets;
 	private InputHandler input;
 	
 	JLayeredPane characters;
@@ -222,5 +222,9 @@ public abstract class Game extends JFrame {
     public static int getWindowWidth() {
     	return WINDOW_WIDTH;
     }
+    
+    public void setRunning(boolean isRunning) {
+		this.isRunning = isRunning;
+	}
     
 }

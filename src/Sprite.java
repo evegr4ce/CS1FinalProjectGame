@@ -10,7 +10,7 @@ public abstract class Sprite {
 	private int y = 0;
 	private BufferedImage image = null;
 	private Image scaledImage = null;
-	
+
 	public Sprite(String path, int x, int y) {
 		this.x = x;
 		this.y = y;
@@ -23,35 +23,38 @@ public abstract class Sprite {
 			System.out.println(e);
 			System.exit(1);
 		}
-		
+
 	}
-	
+
 	public void setX(int new_x) {
 		x = new_x;
 	}
-	
+
 	public void setY(int new_y) {
 		y = new_y;
 	}
-	
+
 	public int getX() {
 		return x;
 	}
-	
+
 	public int getY() {
 		return y;
 	}
-	
+
 	public void updateX(int delta) {
 		x += delta;
-		
+
 		int windowWidth = Game.getWindowWidth();
 	    int spriteWidth = getWidth();
 	    if (x < 0) {
 	        x = 0;
-	    } 
+	    }
+	    else if (x + spriteWidth > windowWidth) {
+	    	x = windowWidth - spriteWidth;
+	    }
 	}
-	
+
 	public void updateY(int delta) {
 		y += delta;
 
@@ -61,36 +64,39 @@ public abstract class Sprite {
 	    if (y < 0) {
 	        y = 0;
 	    } 
+	    if (y > windowHeight) {
+	    	y = windowHeight;
+	    }
 	}
-	
+
 	public void update() {
-		
+
 	}
-	
+
 	public boolean overlaps(Sprite otherSprite) {
 		//Capture heros boundaries
 		Rectangle ourBounds = new Rectangle();
 		ourBounds.setSize(getWidth(), getHeight());
 		ourBounds.setLocation(x,y);
-		
+
 		//Capture other sprite's boundaries
 		Rectangle otherBounds = new Rectangle();
 		otherBounds.setSize(otherSprite.getWidth(), otherSprite.getHeight());
 		otherBounds.setLocation(otherSprite.getX(), otherSprite.getY());
-		
+
 		return ourBounds.intersects(otherBounds);
 	}
-	
+
 	public abstract boolean collidedWith(Sprite other);
-	
+
 	public int getWidth() {
-		return image.getWidth();
+		return scaledImage.getWidth(null);
 	}
-	
+
 	public int getHeight() {
-		return image.getHeight();
+		return scaledImage.getHeight(null);
 	}
-	
+
 	void draw(Graphics game) {
 		game.setColor(Color.BLACK);
 		game.drawImage(scaledImage, x, y, null);
