@@ -2,103 +2,122 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 
 public abstract class Sprite {
-	private int x = 0;
-	private int y = 0;
-	private BufferedImage image = null;
-	private Image scaledImage = null;
+    private int x = 0;
+    private int y = 0;
+    private BufferedImage image = null;
+    private Image scaledImage = null;
 
-	public Sprite(String path, int x, int y) {
-		this.x = x;
-		this.y = y;
-		try {
-			image = ImageIO.read(new File(path));
-			int targetWidth = Game.getWindowWidth() / 4;
-	        int targetHeight = (int) ((double) image.getHeight() / image.getWidth() * targetWidth);
-	        scaledImage = image.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
-		} catch (IOException e) {
-			System.out.println(e);
-			System.exit(1);
-		}
+    public Sprite(String path, int x, int y) {
+        this.x = x;
+        this.y = y;
+        try {
+            image = ImageIO.read(new File(path));
+            int targetWidth = Game.getWindowWidth() / 6;
+            int targetHeight = (int) ((double) image.getHeight() / image.getWidth() * targetWidth);
+            scaledImage = image.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
+        } catch (IOException e) {
+            System.out.println(e);
+            System.exit(1);
+        }
+    }
 
-	}
+    public void setX(int new_x) {
+        x = new_x;
+    }
 
-	public void setX(int new_x) {
-		x = new_x;
-	}
+    public void setY(int new_y) {
+        y = new_y;
+    }
 
-	public void setY(int new_y) {
-		y = new_y;
-	}
+    public int getX() {
+        return x;
+    }
 
-	public int getX() {
-		return x;
-	}
+    public int getY() {
+        return y;
+    }
 
-	public int getY() {
-		return y;
-	}
 
-	public void updateX(int delta) {
-		x += delta;
+    public void updateX(int delta, Obstacle obstacle) {
+        int newX = x + delta;
 
-		int windowWidth = Game.getWindowWidth();
-	    int spriteWidth = getWidth();
-	    if (x < 0) {
-	        x = 0;
-	    }
-	    else if (x + spriteWidth > windowWidth) {
-	    	x = windowWidth - spriteWidth;
-	    }
-	}
+        if (obstacle == null) {
+        	
+        }
+        else if (!obstacle.isCollision(newX, y, getWidth(), getHeight())) {
+            x = newX;
+        }
+        else {
+        	while (obstacle.isCollision(newX, y, getWidth(), getHeight())) {
+        		newX--;
+        	}
+        	
+        	x = newX;
+        }
 
-	public void updateY(int delta) {
-		y += delta;
+        int windowWidth = Game.getWindowWidth();
+        int spriteWidth = getWidth();
+        if (x < 0) x = 0;
+        else if (x + spriteWidth > windowWidth) x = windowWidth - spriteWidth;
+    }
 
-	    int windowHeight = Game.getWindowHeight();
-	    int spriteHeight = getHeight();
+    public void updateY(int delta, Obstacle obstacle) {
+        int newY = y + delta;
 
-	    if (y < 0) {
-	        y = 0;
-	    } 
-	    if (y > windowHeight) {
-	    	y = windowHeight;
-	    }
-	}
+        if (obstacle == null) {
 
-	public void update() {
+        }
+        else if (!obstacle.isCollision(x, newY, getWidth(), getHeight())) {
+        	y = newY;
+        }
+        else {
+        	while (obstacle.isCollision(x, newY, getWidth(), getHeight())) {
+        		newY--;
+        	}
+        	
+        	y = newY;
+        }
 
-	}
+        int windowHeight = Game.getWindowHeight();
+        int spriteHeight = getHeight();
 
-	public boolean overlaps(Sprite otherSprite) {
-		//Capture heros boundaries
-		Rectangle ourBounds = new Rectangle();
-		ourBounds.setSize(getWidth(), getHeight());
-		ourBounds.setLocation(x,y);
+        if (y < 0) y = 0;
+        else if (y + spriteHeight > windowHeight) y = windowHeight - spriteHeight;
+    }
 
-		//Capture other sprite's boundaries
-		Rectangle otherBounds = new Rectangle();
-		otherBounds.setSize(otherSprite.getWidth(), otherSprite.getHeight());
-		otherBounds.setLocation(otherSprite.getX(), otherSprite.getY());
+    public void updateX(int delta) {
+        updateX(delta, null);
+    }
 
-		return ourBounds.intersects(otherBounds);
-	}
+    public void updateY(int delta) {
+        updateY(delta, null);
+    }
 
-	public abstract boolean collidedWith(Sprite other);
 
-	public int getWidth() {
-		return scaledImage.getWidth(null);
-	}
+    public void update() {
+    }
 
-	public int getHeight() {
-		return scaledImage.getHeight(null);
-	}
+    public boolean overlaps(Sprite otherSprite) {
+        Rectangle ourBounds = new Rectangle(x, y, getWidth(), getHeight());
+        Rectangle otherBounds = new Rectangle(otherSprite.getX(), otherSprite.getY(), otherSprite.getWidth(), otherSprite.getHeight());
+        return ourBounds.intersects(otherBounds);
+    }
 
-	void draw(Graphics game) {
-		game.setColor(Color.BLACK);
-		game.drawImage(scaledImage, x, y, null);
-	}
+    public abstract boolean collidedWith(Sprite other);
+
+    public int getWidth() {
+        return scaledImage.getWidth(null);
+    }
+
+    public int getHeight() {
+        return scaledImage.getHeight(null);
+    }
+
+    void draw(Graphics game) {
+        game.setColor(Color.BLACK);
+        game.drawImage(scaledImage, x, y, null);
+    }
 }

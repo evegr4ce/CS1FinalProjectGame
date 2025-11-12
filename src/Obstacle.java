@@ -119,5 +119,33 @@ public class Obstacle extends JPanel {
     public char[][] getMaze() {
         return maze;
     }
-}
+    public boolean isCollision(int pixelX, int pixelY, int spriteWidth, int spriteHeight) {
+        // Check corners and midpoints to ensure sprite can't slip through
+        int[][] points = {
+            {pixelX, pixelY},                                 // top-left
+            {pixelX + spriteWidth - 1, pixelY},              // top-right
+            {pixelX, pixelY + spriteHeight - 1},             // bottom-left
+            {pixelX + spriteWidth - 1, pixelY + spriteHeight - 1}, // bottom-right
+            {pixelX + spriteWidth / 2, pixelY + spriteHeight / 2}  // center
+        };
 
+        for (int[] p : points) {
+            int cellX = p[0] / cellSize;
+            int cellY = p[1] / cellSize;
+
+            // Treat out-of-bounds as wall
+            if (cellX < 0 || cellX >= width || cellY < 0 || cellY >= height) {
+            	System.out.println("Collide!");
+                return true;
+            }
+
+            // Wall collision
+            if (maze[cellY][cellX] == '#') {
+            	System.out.println("Collide!");
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
